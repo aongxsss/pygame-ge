@@ -62,7 +62,7 @@ class Game:
                 hand.image = hand.orig_image.copy()
 
     def draw(self):
-        # Draw the background
+    # Draw the background
         self.background.draw(self.surface)
         
         # Draw the rms
@@ -73,14 +73,24 @@ class Game:
         for hand in self.hands:
             hand.draw(self.surface)
         
-        # Draw the score
-        ui.draw_text(self.surface, f"Score : {self.score}", (5, 5), COLORS["score"], font=FONTS["medium"], shadow=False)
+        if self.time_left > 0:
+            # Draw the score during gameplay
+            ui.draw_text(self.surface, f"Score : {self.score}", (5, 5), 
+                        COLORS["score"], font=FONTS["medium"], shadow=False)
+            
+            # Draw the time left
+            timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
+            ui.draw_text(self.surface, f"Time left : {self.time_left}", 
+                        (SCREEN_WIDTH//2 + 200, 5), timer_text_color, 
+                        font=FONTS["medium"], shadow=False)
+        else:
+            # Draw the final score in the center when game is over
+            ui.draw_text(self.surface, f"Final Score: {self.score}", 
+                        (SCREEN_WIDTH//2, SCREEN_HEIGHT//2 - 50), 
+                        COLORS["final_score"], font=FONTS["big"], 
+                        pos_mode="center", shadow=True)
         
-        # Draw the time left
-        timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
-        ui.draw_text(self.surface, f"Time left : {self.time_left}", 
-             (SCREEN_WIDTH * 0.715, 5), timer_text_color, 
-             font=FONTS["medium"], shadow=False)
+
     def game_time_update(self):
         self.time_left = max(round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0)
         
@@ -89,6 +99,7 @@ class Game:
         self.set_hand_positions()
         self.game_time_update()
         self.draw()
+        
         if self.time_left > 0:
             self.spawn_rms()
             for hand in self.hands:
@@ -96,25 +107,13 @@ class Game:
             for rm in self.rms:
                 rm.move()
         else:
-            center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
-            if ui.button(self.surface, center_x,540, "Continue", click_sound=self.sounds["im_out"]):
+            # Add some spacing below the score for the continue button
+            if ui.button(self.surface, 
+                        SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2,  # Center horizontally
+                        SCREEN_HEIGHT//2 + 50,                  # Below the score
+                        "Continue", 
+                        click_sound=self.sounds["im_out"]):
                 return "menu"
+                
         cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)
-
-# def set_hand_positions(self):
-#         self.frame = self.hand_tracking.scan_hands(self.frame)
-#         hands_positions, hands_closed = self.hand_tracking.get_hands_data()
-#         # Ensure the number of `Hand` objects matches the detected hands
-#         while len(self.hands) < len(hands_positions):
-#             self.hands.append(Hand(hand_id=len(self.hands)))
-#         while len(self.hands) > len(hands_positions):
-#             self.hands.pop()
-#         # Update each hand's position and state
-#         for i, hand in enumerate(self.hands):
-#             hand.rect.center = hands_positions[i]
-#             hand.left_click = hands_closed[i]
-#             if hand.left_click:
-#                 hand.image = hand.image_smaller.copy()
-#             else:
-#                 hand.image = hand.orig_image.copy()

@@ -19,13 +19,13 @@ DRAW_HITBOX = False # will draw all the hitbox
 # animation
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec
 # difficulty
-GAME_DURATION = 120 # the game will last X sec
+GAME_DURATION = 5 # the game will last X sec
 MORTY_SPAWN_TIME = 0.5
 MORTY_MOVE_SPEED = {"min": 6, "max": 12}
 # MORTY_MOVE_SPEED = {"min": 1, "max": 6}
 RICK_PENALITY = 1 # will remove X of the score of the player (if he kills an rick)
 # colors
-COLORS = {"title": (255, 255, 255), "score": (255, 255, 255), "timer": (255, 255, 255),
+COLORS = {"title": (255, 255, 255), "score": (255, 255, 255),"final_score": (255, 215, 0), "timer": (255, 255, 255),
             "buttons": {"default": (56, 67, 209), "second":  (87, 99, 255),
                         "text": (255, 255, 255), "shadow": (0, 0, 0)}} # second is the color when the mouse is on the button
 # sounds / music
@@ -34,7 +34,7 @@ SOUNDS_VOLUME = 0.2
 # fonts
 pygame.font.init()
 FONTS = {}
-FONTS["small"] = pygame.font.Font(None, 35)
+FONTS["small"] = pygame.font.Font("assets/font/BajiRoundedMedium-pgpRr.ttf", 35)
 # FONTS["medium"] = pygame.font.Font(None, 65)
 FONTS["medium"] = pygame.font.Font("assets/font/BajiRoundedMedium-pgpRr.ttf", 55)
-FONTS["big"] = pygame.font.Font(None, 110)
+FONTS["big"] = pygame.font.Font("assets/font/BajiRoundedMedium-pgpRr.ttf", 110)
