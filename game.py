@@ -16,12 +16,19 @@ class Game:
         self.cap = cv2.VideoCapture(1)
         self.sounds = {}
         self.sounds["im_out"] = pygame.mixer.Sound("assets/sounds/im_out.mp3")
+
     def reset(self):
         self.hand_tracking = HandTracking()
         self.hands = []  # List of Hand objects
         self.rms = []
         self.rms_spawn_timer = 0
-        self.score = 0
+        self.scores = {
+            "Pink": 0,
+            "Red": 0,
+            "Yellow": 0,
+            "Purple": 0,
+            "Blue": 0
+        }
         self.game_start_time = time.time()
 
     def spawn_rms(self):
@@ -63,7 +70,16 @@ class Game:
             else:
                 hand.image = hand.orig_image.copy()
     def draw(self):
-    # Draw the background
+        # Define colors for each hand type
+        SCORE_COLORS = {
+            "Pink": (255, 192, 203),   # สีชมพู
+            "Red": (255, 0, 0),        # สีแดง
+            "Yellow": (255, 255, 0),   # สีเหลือง
+            "Purple": (128, 0, 128),   # สีม่วง
+            "Blue": (0, 0, 255)        # สีน้ำเงิน
+        }
+        
+        # Draw the background
         self.background.draw(self.surface)
         
         # Draw the rms
@@ -74,23 +90,20 @@ class Game:
         for hand in self.hands:
             hand.draw(self.surface)
         
-        if self.time_left > 0:
-            # Draw the score during gameplay
-            ui.draw_text(self.surface, f"Score : {self.score}", (5, 5), 
-                        COLORS["score"], font=FONTS["medium"], shadow=False)
+        y_offset = 20
+        for color, score in self.scores.items():
+            if score > 0:  
+                ui.draw_text(self.surface, f"{color} Score: {score}", 
+                        (5, y_offset), SCORE_COLORS[color],  
+                        font=FONTS["small"], shadow=False)
+                y_offset += 35
+    
+    # Draw the time left
+        timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
+        ui.draw_text(self.surface, f"Time left: {self.time_left}", 
+                    (SCREEN_WIDTH//2, 5), timer_text_color, 
+                font=FONTS["medium"], shadow=False)
             
-            # Draw the time left
-            timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
-            ui.draw_text(self.surface, f"Time left : {self.time_left}", 
-                        (SCREEN_WIDTH//2 + 200, 5), timer_text_color, 
-                        font=FONTS["medium"], shadow=False)
-        else:
-            # Draw the final score in the center when game is over
-            ui.draw_text(self.surface, f"Final Score: {self.score}", 
-                        (SCREEN_WIDTH//2, SCREEN_HEIGHT//2 - 50), 
-                        COLORS["final_score"], font=FONTS["big"], 
-                        pos_mode="center", shadow=True)
-        
 
     def game_time_update(self):
         self.time_left = max(round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0)
@@ -100,20 +113,47 @@ class Game:
         self.set_hand_positions()
         self.game_time_update()
         self.draw()
-        
         if self.time_left > 0:
             self.spawn_rms()
             for hand in self.hands:
-                self.score = hand.kill_rms(self.rms, self.score, self.sounds)
+                hand_color = hand.get_color()
+                score = hand.kill_rms(self.rms, self.scores[hand_color], self.sounds)
+                self.scores[hand_color] = score
             for rm in self.rms:
                 rm.move()
         else:
-            # Add some spacing below the score for the continue button
-            if ui.button(self.surface, 
-                        SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2,  # Center horizontally
-                        SCREEN_HEIGHT//2 + 50,                  # Below the score
-                        "Continue", 
-                        click_sound=self.sounds["im_out"]):
+            
+            sorted_scores = sorted([(color, score) for color, score in self.scores.items() if score > 0],
+                                 key=lambda x: x[1], reverse=True)
+            
+            center_x = SCREEN_WIDTH // 2
+            y_start = 380 
+            
+            ui.draw_text(self.surface, "Top Scores", 
+                        (center_x, y_start), 
+                        (0, 0, 0), 
+                        font=FONTS["medium"], 
+                        pos_mode="center")
+            
+            rank_colors = {
+                0: (255, 215, 0),  # gold
+                1: (192, 192, 192),  # silver
+                2: (205, 127, 50)  # bronze
+            }
+            
+            for i, (color, score) in enumerate(sorted_scores[:3]):
+                y_pos = y_start + 40 + (i * 40) 
+                rank_text = ["1st", "2nd", "3rd"][i]
+                text = f"{rank_text}: {color} - {score}"
+                ui.draw_text(self.surface, text,
+                           (center_x, y_pos),
+                           rank_colors[i],
+                           font=FONTS["small"],
+                           pos_mode="center")
+            
+            # แสดงปุ่ม Continue
+            center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
+            if ui.button(self.surface, center_x, 540, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
                 
         cv2.imshow("Frame", self.frame)
