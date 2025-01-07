@@ -78,8 +78,9 @@ class Game:
         
         # Draw the time left
         timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
-        ui.draw_text(self.surface, f"Time left : {self.time_left}", (SCREEN_WIDTH//2, 5), timer_text_color, font=FONTS["medium"], shadow=False)
-
+        ui.draw_text(self.surface, f"Time left : {self.time_left}", 
+             (SCREEN_WIDTH * 0.715, 5), timer_text_color, 
+             font=FONTS["medium"], shadow=False)
     def game_time_update(self):
         self.time_left = max(round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0)
         
@@ -95,7 +96,8 @@ class Game:
             for rm in self.rms:
                 rm.move()
         else:
-            if ui.button(self.surface, 540, "Continue", click_sound=self.sounds["im_out"]):
+            center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
+            if ui.button(self.surface, center_x,540, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
         cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)

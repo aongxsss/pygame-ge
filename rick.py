@@ -16,4 +16,5 @@ class Rick(Morty):
         self.animation_timer = 0
     def kill(self, rick): # remove rick from the list
         rick.remove(self)
-        return -RICK_PENALITY
+        # return -RICK_PENALITY
+        return 1

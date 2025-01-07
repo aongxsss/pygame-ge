@@ -1,5 +1,5 @@
 import pygame
-WINDOW_NAME = "iShwifty"
+WINDOW_NAME = "Galactic Defenders"
 GAME_TITLE = WINDOW_NAME
 SCREEN_WIDTH, SCREEN_HEIGHT = 1400, 780
 # SCREEN_WIDTH, SCREEN_HEIGHT = 1280, 750
@@ -19,9 +19,10 @@ DRAW_HITBOX = False # will draw all the hitbox
 # animation
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec
 # difficulty
-GAME_DURATION = 10 # the game will last X sec
-MORTY_SPAWN_TIME = 1
-MORTY_MOVE_SPEED = {"min": 1, "max": 6}
+GAME_DURATION = 120 # the game will last X sec
+MORTY_SPAWN_TIME = 0.5
+MORTY_MOVE_SPEED = {"min": 6, "max": 12}
+# MORTY_MOVE_SPEED = {"min": 1, "max": 6}
 RICK_PENALITY = 1 # will remove X of the score of the player (if he kills an rick)
 # colors
 COLORS = {"title": (255, 255, 255), "score": (255, 255, 255), "timer": (255, 255, 255),
@@ -34,5 +35,6 @@ SOUNDS_VOLUME = 0.2
 pygame.font.init()
 FONTS = {}
 FONTS["small"] = pygame.font.Font(None, 35)
-FONTS["medium"] = pygame.font.Font(None, 65)
+# FONTS["medium"] = pygame.font.Font(None, 65)
+FONTS["medium"] = pygame.font.Font("assets/font/BajiRoundedMedium-pgpRr.ttf", 55)
 FONTS["big"] = pygame.font.Font(None, 110)

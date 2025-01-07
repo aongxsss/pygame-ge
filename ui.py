@@ -13,16 +13,20 @@ def draw_text(surface, text, pos, color, font=FONTS["medium"], pos_mode="top_lef
         surface.blit(label_shadow, (label_rect.x - shadow_offset, label_rect.y + shadow_offset))
     surface.blit(label, label_rect) 
     
-def button(surface, pos_y, text=None, click_sound=None):
-    rect = pygame.Rect((SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
+def button(surface, pos_x, pos_y, text=None, click_sound=None):
+    rect = pygame.Rect((pos_x, pos_y), BUTTONS_SIZES) 
+    # rect = pygame.Rect((SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
+    border_radius = 15
     on_button = False
     if rect.collidepoint(pygame.mouse.get_pos()):
         color = COLORS["buttons"]["second"]
         on_button = True
     else:
         color = COLORS["buttons"]["default"]
-    pygame.draw.rect(surface, COLORS["buttons"]["shadow"], (rect.x - 6, rect.y - 6, rect.w, rect.h)) 
-    pygame.draw.rect(surface, color, rect) 
+
+   
+    pygame.draw.rect(surface, COLORS["buttons"]["shadow"], (rect.x - 6, rect.y - 6, rect.w, rect.h), border_radius=border_radius) 
+    pygame.draw.rect(surface, color, rect,border_radius=border_radius) 
     if text is not None:
         draw_text(surface, text, rect.center, COLORS["buttons"]["text"], pos_mode="center",
                     shadow=True, shadow_color=COLORS["buttons"]["shadow"])
