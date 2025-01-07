@@ -48,11 +48,13 @@ class Game:
         
         # Ensure the number of `Hand` objects matches the detected hands
         while len(self.hands) < len(hands_positions):
-            self.hands.append(Hand())
+            new_hand_id = len(self.hands)  # This will automatically use the correct image based on order
+            self.hands.append(Hand(hand_id=new_hand_id))
+            
         while len(self.hands) > len(hands_positions):
             self.hands.pop()
-
-        # Update each hand's position and state
+            
+        # Update positions and states for existing hands
         for i, hand in enumerate(self.hands):
             hand.rect.center = hands_positions[i]
             hand.left_click = hands_closed[i]
@@ -60,7 +62,6 @@ class Game:
                 hand.image = hand.image_smaller.copy()
             else:
                 hand.image = hand.orig_image.copy()
-
     def draw(self):
     # Draw the background
         self.background.draw(self.surface)

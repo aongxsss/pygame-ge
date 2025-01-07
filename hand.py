@@ -5,10 +5,24 @@ from hand_tracking import HandTracking
 import cv2
 import random
 class Hand:
-    def __init__(self):
-        self.orig_image = image.load("assets/images/hand/Hand.png", size=(HAND_SIZE, HAND_SIZE))
+    HAND_IMAGES = [
+        "assets/images/hand/Hand_Pink.png",
+        "assets/images/hand/Hand_Red.png",
+        "assets/images/hand/Hand_Yellow.png",
+        "assets/images/hand/Hand_Purple.png",
+        "assets/images/hand/Hand_Blue.png"
+    ]
+
+    def __init__(self, hand_id=0):
+        self.hand_id = hand_id
+        hand_image = self.HAND_IMAGES[hand_id % len(self.HAND_IMAGES)]
+        
+        # Load images
+        self.orig_image = image.load(hand_image, size=(HAND_SIZE, HAND_SIZE))
         self.image = self.orig_image.copy()
         self.image_smaller = image.load("assets/images/hand/portal.png", size=(HAND_SIZE - 50, HAND_SIZE - 50))
+        
+        # Setup rect and state
         self.rect = pygame.Rect(SCREEN_WIDTH//2, SCREEN_HEIGHT//2, HAND_HITBOX_SIZE[0], HAND_HITBOX_SIZE[1])
         self.left_click = False
         #self.hand_tracking = HandTracking()

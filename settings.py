@@ -19,7 +19,7 @@ DRAW_HITBOX = False # will draw all the hitbox
 # animation
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec
 # difficulty
-GAME_DURATION = 5 # the game will last X sec
+GAME_DURATION = 100 # the game will last X sec
 MORTY_SPAWN_TIME = 0.5
 MORTY_MOVE_SPEED = {"min": 6, "max": 12}
 # MORTY_MOVE_SPEED = {"min": 1, "max": 6}
