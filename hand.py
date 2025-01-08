@@ -19,7 +19,6 @@ class Hand:
         self.hand_id = hand_id
         self.color = self.HAND_COLORS[hand_id % len(self.HAND_COLORS)]
         hand_image = self.HAND_IMAGES[hand_id % len(self.HAND_IMAGES)]
-        
         self.orig_image = image.load(hand_image, size=(HAND_SIZE, HAND_SIZE))
         self.image = self.orig_image.copy()
         self.image_smaller = image.load("assets/images/hand/portal.png", size=(HAND_SIZE - 50, HAND_SIZE - 50))
@@ -45,13 +44,19 @@ class Hand:
     def on_rm(self, rms): # return a list with all RM's that collide with the hand hitbox
         return [rm for rm in rms if self.rect.colliderect(rm.rect)]
     
-    def kill_rms(self, rms, score, sounds):
-        if self.left_click:
+    def kill_rms(self, rms, score, sounds): # will kill the RM's that collide with the hand when the left mouse button is pressed
+        rickSounds = [ 'assets/sounds/oh.mp3',
+                      'assets/sounds/you_lil_turd.mp3', 'assets/sounds/you_lil_piece_of_shit.mp3',
+                     'assets/sounds/bitch.mp3']
+        if self.left_click: # if left click
             for rm in self.on_rm(rms):
+                rickSound = random.choice(rickSounds)
                 rm_score = rm.kill(rms)
                 score += rm_score
                 if rm_score < 0:
-                    pygame.mixer.Sound('assets/sounds/bitch.mp3').play().set_volume(SOUNDS_VOLUME)
+                    pygame.mixer.Sound(rickSound).play().set_volume(SOUNDS_VOLUME)
                 else:
                     pygame.mixer.Sound('assets/sounds/slap.wav').play().set_volume(SOUNDS_VOLUME)
+        else:
+            self.left_click = False
         return score

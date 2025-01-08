@@ -52,23 +52,45 @@ class Game:
     def set_hand_positions(self):
         self.frame = self.hand_tracking.scan_hands(self.frame)
         hands_positions, hands_closed = self.hand_tracking.get_hands_data()
-        
-        # Ensure the number of `Hand` objects matches the detected hands
-        while len(self.hands) < len(hands_positions):
-            new_hand_id = len(self.hands)  # This will automatically use the correct image based on order
-            self.hands.append(Hand(hand_id=new_hand_id))
+        tracked_hands = self.hand_tracking.tracked_hands
+
+        # สร้าง map ของ position กับ hand_id จาก tracked_hands
+        position_to_id = {}
+        for i, pos in enumerate(hands_positions):
+            screen_x, screen_y = pos
+            rel_x, rel_y = screen_x/SCREEN_WIDTH, screen_y/SCREEN_HEIGHT
+            for tracked_pos, tracked_id in tracked_hands.items():
+                if abs(tracked_pos[0] - rel_x) < 0.1 and abs(tracked_pos[1] - rel_y) < 0.1:
+                    position_to_id[pos] = tracked_id
+                    break
+        # จัดการกับ hands list
+        new_hands = []
+        for i, (pos, is_closed) in enumerate(zip(hands_positions, hands_closed)):
+            hand_id = position_to_id.get(pos, i)  # ไม่ต้องทำ modulo ที่นี่
             
-        while len(self.hands) > len(hands_positions):
-            self.hands.pop()
+            # หา hand เดิมที่มี id ตรงกัน
+            existing_hand = None
+            for hand in self.hands:
+                if hand.hand_id == hand_id % 5:  # เทียบ hand_id หลัง modulo
+                    existing_hand = hand
+                    break
             
-        # Update positions and states for existing hands
-        for i, hand in enumerate(self.hands):
-            hand.rect.center = hands_positions[i]
-            hand.left_click = hands_closed[i]
-            if hand.left_click:
+            # ถ้าไม่มี hand เดิม สร้างใหม่
+            if existing_hand is None:
+                hand = Hand(hand_id=hand_id)  # Hand class จะจัดการ modulo เอง
+            else:
+                hand = existing_hand
+                
+            # อัพเดตตำแหน่งและสถานะ
+            hand.rect.center = pos
+            hand.left_click = is_closed
+            if is_closed:
                 hand.image = hand.image_smaller.copy()
             else:
                 hand.image = hand.orig_image.copy()
+            new_hands.append(hand)
+
+        self.hands = new_hands
     def draw(self):
         # Define colors for each hand type
         SCORE_COLORS = {

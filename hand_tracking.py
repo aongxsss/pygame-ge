@@ -56,34 +56,42 @@ class HandTracking:
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        # Reset lists but keep tracked_hands
         self.hands_positions = []
         self.hands_closed = []
-        current_hands = set()  # Track currently detected hands
+        current_hands = set()
         
         if self.results.multi_hand_landmarks:
             detected_hands = []
+            # สร้าง set ของ IDs ที่ใช้งานอยู่
+            used_ids = set(self.tracked_hands.values())
+            
             for hand_landmarks in self.results.multi_hand_landmarks:
                 x, y = hand_landmarks.landmark[9].x, hand_landmarks.landmark[9].y
                 screen_x, screen_y = int(x * SCREEN_WIDTH), int(y * SCREEN_HEIGHT)
                 
-                # Find or assign hand ID
                 hand_found = False
+                # ตรวจสอบมือที่มีอยู่แล้ว
                 for tracked_pos, hand_id in list(self.tracked_hands.items()):
                     old_x, old_y = tracked_pos
-                    # Check if this is the same hand (within a reasonable distance)
                     if abs(x - old_x) < 0.2 and abs(y - old_y) < 0.2:
                         del self.tracked_hands[tracked_pos]
                         self.tracked_hands[(x, y)] = hand_id
                         hand_found = True
                         break
                 
-                # If this is a new hand, assign the next available ID
+                # ถ้าเป็นมือใหม่
                 if not hand_found:
-                    self.tracked_hands[(x, y)] = self.next_id
-                    self.next_id = min(self.next_id + 1, 4)  # Max 5 hands (0-4)
+                    # หา ID ที่ว่างอยู่
+                    available_id = 0
+                    while available_id in used_ids and available_id < 5:
+                        available_id += 1
+                    
+                    # ถ้ายังมี ID ว่างอยู่
+                    if available_id < 5:
+                        self.tracked_hands[(x, y)] = available_id
+                        used_ids.add(available_id)
                 
-                # Check if hand is closed
+                # เช็คว่ามือกำหรือไม่
                 y_tip = hand_landmarks.landmark[12].y
                 is_closed = y_tip > y
                 
@@ -94,7 +102,6 @@ class HandTracking:
                 ))
                 current_hands.add((x, y))
                 
-                # Draw landmarks
                 mp_drawing.draw_landmarks(
                     image,
                     hand_landmarks,
@@ -103,25 +110,23 @@ class HandTracking:
                     mp_drawing_styles.get_default_hand_connections_style()
                 )
 
-            # Remove hands that are no longer detected
+            # ลบมือที่ไม่ได้ถูกตรวจจับแล้ว
             self.tracked_hands = {pos: id_ for pos, id_ in self.tracked_hands.items() 
                                 if pos in current_hands}
 
-            # Sort by hand ID to maintain consistent order
+            # เรียงตาม ID
             detected_hands.sort(key=lambda x: x[0])
             
-            # Update positions and states lists
+            # อัพเดตตำแหน่งและสถานะ
             for _, pos, closed in detected_hands:
                 self.hands_positions.append(pos)
                 self.hands_closed.append(closed)
 
-        # If no hands detected, clear tracking
+        # ถ้าไม่พบมือ
         if not self.results.multi_hand_landmarks:
             self.tracked_hands.clear()
-            self.next_id = 0
 
         return image
-
 
     def get_hands_data(self):
         return self.hands_positions, self.hands_closed
