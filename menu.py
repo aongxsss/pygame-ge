@@ -7,7 +7,7 @@ import image
 class Menu:
     def __init__(self, surface):
         self.surface = surface
-        self.background = Background('assets/images/background/menu_bg.png')
+        self.background = Background('assets/images/background/menu_bg2.png')
         self.click_sound = pygame.mixer.Sound(f"assets/sounds/hey_whatup.mp3")
     def draw(self):
         self.background.draw(self.surface)

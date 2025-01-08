@@ -44,6 +44,7 @@ class Game:
             # spawn a other morty after the half of the game
             if self.time_left < GAME_DURATION/2:
                 self.rms.append(Morty())
+                
     def load_camera(self):
         _, self.frame = self.cap.read()
         # width = 800 
@@ -92,14 +93,6 @@ class Game:
 
         self.hands = new_hands
     def draw(self):
-        # Define colors for each hand type
-        SCORE_COLORS = {
-            "Pink": (255, 192, 203),   # สีชมพู
-            "Red": (255, 0, 0),        # สีแดง
-            "Yellow": (255, 255, 0),   # สีเหลือง
-            "Purple": (128, 0, 128),   # สีม่วง
-            "Blue": (0, 0, 255)        # สีน้ำเงิน
-        }
         
         # Draw the background
         self.background.draw(self.surface)
@@ -121,9 +114,9 @@ class Game:
                 y_offset += 35
     
     # Draw the time left
-        timer_text_color = (160, 40, 0) if self.time_left < 5 else COLORS["timer"]
+        timer_text_color = (255, 255, 255) if self.time_left < 5 else COLORS["timer"]
         ui.draw_text(self.surface, f"Time left: {self.time_left}", 
-                    (SCREEN_WIDTH//2, 5), timer_text_color, 
+                    (SCREEN_WIDTH//1.4, 5), timer_text_color, 
                 font=FONTS["medium"], shadow=False)
             
 
@@ -144,28 +137,54 @@ class Game:
             for rm in self.rms:
                 rm.move()
         else:
-            
+            shadow = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)) 
+            # shadow.fill((6, 2, 38)) 
+            shadow.set_alpha(180)  
+            self.surface.blit(shadow, (0, 0))
+
+            # x_scores_rect = SCREEN_WIDTH // 2 - 300 #  SCREEN_WIDTH // 2 - 200
+            # y_scores_rect = 100 # 250
+            # width_scores_rect = 600 # 400
+            # height_scores_rect = 600 # 300
+
+            x_scores_rect = SCREEN_WIDTH * 0.3 #  SCREEN_WIDTH // 2 - 200
+            y_scores_rect = SCREEN_HEIGHT * 0.15 # 250
+            width_scores_rect = 600 # 400
+            height_scores_rect = 500 # 300
+            scores_rect = pygame.Rect(x_scores_rect, y_scores_rect, width_scores_rect, height_scores_rect) # กรอบ Top Scorers
+            pygame.draw.rect(self.surface, (6, 2, 38), scores_rect, border_radius=30)  # วาดพื้นหลังกรอบ 
+            pygame.draw.rect(self.surface, (189, 173, 0), scores_rect, width=10, border_radius=30)  # วาดกรอบ 
+
             sorted_scores = sorted([(color, score) for color, score in self.scores.items() if score > 0],
                                  key=lambda x: x[1], reverse=True)
             
+            padding = 60
             center_x = SCREEN_WIDTH // 2
-            y_start = 380 
+            y_start = y_scores_rect + padding 
             
-            ui.draw_text(self.surface, "Top Scores", 
-                        (center_x, y_start), 
-                        (0, 0, 0), 
-                        font=FONTS["medium"], 
-                        pos_mode="center")
-            
+            # ui.draw_text(self.surface, "Top Scorers", 
+            #             (center_x, y_start), 
+            #             COLORS["buttons"]["default"], 
+            #             font=FONTS["medium"], 
+            #             pos_mode="center")
+
+            ui.draw_text_with_outline(
+                    surface=self.surface,
+                    text="Top Scorers",
+                    pos=(center_x, y_start),
+                    main_color=COLORS["buttons"]["default"],
+                    outline_color=(255, 255, 255),
+                    font=FONTS["medium"],
+                    pos_mode="center",
+                    outline_width=3
+            )
             rank_colors = {
-                0: (255, 215, 0),  # gold
-                1: (192, 192, 192),  # silver
-                2: (205, 127, 50)  # bronze
+                i: SCORE_COLORS[color] for i, (color, _) in enumerate(sorted_scores[:5])
             }
             
-            for i, (color, score) in enumerate(sorted_scores[:3]):
-                y_pos = y_start + 40 + (i * 40) 
-                rank_text = ["1st", "2nd", "3rd"][i]
+            for i, (color, score) in enumerate(sorted_scores[:5]):
+                y_pos = y_start + 70 + (i * 55) 
+                rank_text = ["1st", "2nd", "3rd", "4th", "5th"][i]
                 text = f"{rank_text}: {color} - {score}"
                 ui.draw_text(self.surface, text,
                            (center_x, y_pos),
@@ -173,9 +192,10 @@ class Game:
                            font=FONTS["small"],
                            pos_mode="center")
             
-            # แสดงปุ่ม Continue
+            # # Continue button
             center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
-            if ui.button(self.surface, center_x, 540, "Continue", click_sound=self.sounds["im_out"]):
+            button_y = SCREEN_HEIGHT * 0.56
+            if ui.button(self.surface, center_x, button_y, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
                 
         cv2.imshow("Frame", self.frame)
