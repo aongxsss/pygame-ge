@@ -17,4 +17,4 @@ class Rick(Morty):
     def kill(self, rick): # remove rick from the list
         rick.remove(self)
         # return -RICK_PENALITY
-        return 1
+        return 3
