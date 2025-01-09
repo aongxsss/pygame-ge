@@ -7,11 +7,11 @@ from menu import Menu
 pygame.init()
 pygame.display.set_caption(WINDOW_NAME)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.FULLSCREEN) 
-# SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),0,32)
+# SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
 
 mainClock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("coopbl", 22)
-pygame.mixer.music.load("assets/sounds/theme_song.mp3")
+pygame.mixer.music.load("assets/sounds/Alien_theme_song.mp3")
 pygame.mixer.music.set_volume(MUSIC_VOLUME)
 pygame.mixer.music.play(-1)
 state = "menu"

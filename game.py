@@ -16,12 +16,16 @@ class Game:
         self.cap = cv2.VideoCapture(1)
         self.sounds = {}
         self.sounds["im_out"] = pygame.mixer.Sound("assets/sounds/im_out.mp3")
+        self.sounds["Applause"] = pygame.mixer.Sound("assets/sounds/Applause.mp3")
+        self.sounds["Applause"].set_volume(0.5) 
+        self.end_sound_played = False 
 
     def reset(self):
         self.hand_tracking = HandTracking()
         self.hands = []  # List of Hand objects
         self.rms = []
         self.rms_spawn_timer = 0
+        self.rick_delay_timer = time.time() + 10
         self.scores = {
             "Pink": 0,
             "Red": 0,
@@ -29,22 +33,28 @@ class Game:
             "Purple": 0,
             "Blue": 0
         }
+        self.end_sound_played = False
         self.game_start_time = time.time()
+        self.initial_delay = 10
 
     def spawn_rms(self):
         t = time.time()
+        # Only start spawning after the initial delay
+        if (t - self.game_start_time) < self.initial_delay:
+            return
+            
         if t > self.rms_spawn_timer:
             self.rms_spawn_timer = t + MORTY_SPAWN_TIME
             # increase the probability that the rm will be a rick over time
-            nb = (GAME_DURATION-self.time_left)/GAME_DURATION * 100  / 2  # increase from 0 to 50 during all  the game (linear)
+            elapsed_time = t - self.game_start_time - self.initial_delay  # Adjust elapsed time to account for delay
+            nb = (GAME_DURATION-self.time_left)/GAME_DURATION * 100 / 2  # increase from 0 to 50 during all the game (linear)
             if random.randint(0, 100) < nb:
                 self.rms.append(Rick())
             else:
                 self.rms.append(Morty())
-            # spawn a other morty after the half of the game
+            # spawn another morty after the half of the game
             if self.time_left < GAME_DURATION/2:
                 self.rms.append(Morty())
-                
     def load_camera(self):
         _, self.frame = self.cap.read()
         # width = 800 
@@ -137,9 +147,13 @@ class Game:
             for rm in self.rms:
                 rm.move()
         else:
+            if not self.end_sound_played:  
+                self.sounds["Applause"].play() 
+                self.end_sound_played = True
+
             shadow = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT)) 
             # shadow.fill((6, 2, 38)) 
-            shadow.set_alpha(180)  
+            shadow.set_alpha(100)  
             self.surface.blit(shadow, (0, 0))
 
             # x_scores_rect = SCREEN_WIDTH // 2 - 300 #  SCREEN_WIDTH // 2 - 200
@@ -148,7 +162,7 @@ class Game:
             # height_scores_rect = 600 # 300
 
             x_scores_rect = SCREEN_WIDTH * 0.3 #  SCREEN_WIDTH // 2 - 200
-            y_scores_rect = SCREEN_HEIGHT * 0.15 # 250
+            y_scores_rect = SCREEN_HEIGHT * 0.18 # 250
             width_scores_rect = 600 # 400
             height_scores_rect = 500 # 300
             scores_rect = pygame.Rect(x_scores_rect, y_scores_rect, width_scores_rect, height_scores_rect) # กรอบ Top Scorers
@@ -161,12 +175,6 @@ class Game:
             padding = 60
             center_x = SCREEN_WIDTH // 2
             y_start = y_scores_rect + padding 
-            
-            # ui.draw_text(self.surface, "Top Scorers", 
-            #             (center_x, y_start), 
-            #             COLORS["buttons"]["default"], 
-            #             font=FONTS["medium"], 
-            #             pos_mode="center")
 
             ui.draw_text_with_outline(
                     surface=self.surface,
@@ -191,13 +199,11 @@ class Game:
                            rank_colors[i],
                            font=FONTS["score_board_by_color"],
                            pos_mode="center")
-            
             # # Continue button
             padding_continue_button = 20
             center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
             button_y = SCREEN_HEIGHT * 0.56
             if ui.button(self.surface, center_x, button_y+padding_continue_button, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
-                
         cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)
