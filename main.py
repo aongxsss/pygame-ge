@@ -6,7 +6,9 @@ from game import Game
 from menu import Menu
 pygame.init()
 pygame.display.set_caption(WINDOW_NAME)
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),0,32)
+SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.FULLSCREEN) 
+# SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),0,32)
+
 mainClock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("coopbl", 22)
 pygame.mixer.music.load("assets/sounds/theme_song.mp3")
