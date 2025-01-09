@@ -24,7 +24,7 @@ DRAW_HITBOX = False # will draw all the hitbox
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec # Default is 0.09
 # ANIMATION_SPEED = 0.3
 # difficulty
-GAME_DURATION = 5 # the game will last X sec
+GAME_DURATION = 20 # the game will last X sec
 MORTY_SPAWN_TIME = 0.5 # Default is 1
 MORTY_MOVE_SPEED = {"min": 6, "max": 8} # Default is 1 {"min": 1, "max": 6}
 RICK_PENALITY = 1 # will remove X of the score of the player (if he kills an rick)
@@ -41,6 +41,8 @@ FONTS = {}
 FONTS["small"] = pygame.font.Font("assets/font/alata-regular.ttf", 35)
 # FONTS["medium"] = pygame.font.Font(None, 65)
 FONTS["medium"] = pygame.font.Font("assets/font/alata-regular.ttf", 55)
+FONTS["score_board_top"] = pygame.font.Font("assets/font/SansSerifExbFLF.otf", 60)
+FONTS["score_board_by_color"] = pygame.font.Font("assets/font/SansSerifExbFLF.otf", 40)
 # FONTS["medium"] = pygame.font.Font("assets/font/Basic-Regular.otf", 55)
 FONTS["big"] = pygame.font.Font("assets/font/alata-regular.ttf", 110)
 

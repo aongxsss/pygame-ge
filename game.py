@@ -174,7 +174,7 @@ class Game:
                     pos=(center_x, y_start),
                     main_color=COLORS["buttons"]["default"],
                     outline_color=(255, 255, 255),
-                    font=FONTS["medium"],
+                    font=FONTS["score_board_top"],
                     pos_mode="center",
                     outline_width=3
             )
@@ -189,13 +189,14 @@ class Game:
                 ui.draw_text(self.surface, text,
                            (center_x, y_pos),
                            rank_colors[i],
-                           font=FONTS["small"],
+                           font=FONTS["score_board_by_color"],
                            pos_mode="center")
             
             # # Continue button
+            padding_continue_button = 20
             center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
             button_y = SCREEN_HEIGHT * 0.56
-            if ui.button(self.surface, center_x, button_y, "Continue", click_sound=self.sounds["im_out"]):
+            if ui.button(self.surface, center_x, button_y+padding_continue_button, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
                 
         cv2.imshow("Frame", self.frame)

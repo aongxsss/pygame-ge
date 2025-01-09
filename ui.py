@@ -13,7 +13,7 @@ def draw_text(surface, text, pos, color, font=FONTS["medium"], pos_mode="top_lef
         surface.blit(label_shadow, (label_rect.x - shadow_offset, label_rect.y + shadow_offset))
     surface.blit(label, label_rect) 
 
-def draw_text_with_outline(surface, text, pos, main_color, outline_color, font=FONTS["medium"], 
+def draw_text_with_outline(surface, text, pos, main_color, outline_color, font=FONTS["score_board_top"], 
                            pos_mode="top_left", shadow=False, shadow_color=(10, 0, 0), 
                            shadow_offset=2, outline_width=2):
     # วาดข้อความพร้อมขอบสี
@@ -42,7 +42,7 @@ def draw_text_with_outline(surface, text, pos, main_color, outline_color, font=F
     surface.blit(label, label_rect)
 
 
-def button(surface, pos_x, pos_y, text=None, click_sound=None):
+def button(surface, pos_x, pos_y, text=None,click_sound=None):
     rect = pygame.Rect((pos_x, pos_y), BUTTONS_SIZES) 
     # rect = pygame.Rect((SCREEN_WIDTH//2 - BUTTONS_SIZES[0]//2, pos_y), BUTTONS_SIZES)
     border_radius = 15
@@ -57,6 +57,7 @@ def button(surface, pos_x, pos_y, text=None, click_sound=None):
     pygame.draw.rect(surface, COLORS["buttons"]["shadow"], (rect.x - 6, rect.y - 6, rect.w, rect.h), border_radius=border_radius) 
     pygame.draw.rect(surface, color, rect,border_radius=border_radius) 
     if text is not None:
+ 
         draw_text(surface, text, rect.center, COLORS["buttons"]["text"], pos_mode="center",
                     shadow=True, shadow_color=COLORS["buttons"]["shadow"])
     if on_button and pygame.mouse.get_pressed()[0]: 
