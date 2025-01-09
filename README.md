@@ -3,7 +3,7 @@
 ```
 python3 -m venv venv
 ./venv/Scripts/activate # for windowos
-./venv/Scripts/activate # macos
+source ./venv/bin/activate # macos
 ```
 
 ### Install Packages
