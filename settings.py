@@ -24,7 +24,7 @@ DRAW_HITBOX = False # will draw all the hitbox
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec # Default is 0.09
 # ANIMATION_SPEED = 0.3
 # difficulty
-GAME_DURATION = 20 # the game will last X sec
+GAME_DURATION = 70 # the game will last X sec
 MORTY_SPAWN_TIME = 0.5 # Default is 1
 MORTY_MOVE_SPEED = {"min": 6, "max": 8} # Default is 1 {"min": 1, "max": 6}
 RICK_PENALITY = 1 # will remove X of the score of the player (if he kills an rick)

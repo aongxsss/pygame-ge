@@ -7,7 +7,7 @@ from menu import Menu
 pygame.init()
 pygame.display.set_caption(WINDOW_NAME)
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.FULLSCREEN) 
-# SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
+# SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.SCALED)
 
 mainClock = pygame.time.Clock()
 fps_font = pygame.font.SysFont("coopbl", 22)

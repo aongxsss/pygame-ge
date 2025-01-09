@@ -95,11 +95,24 @@ class HandTracking:
                 y_tip = hand_landmarks.landmark[12].y
                 is_closed = y_tip > y
                 
+                try:
+                    hand_id = self.tracked_hands[(x, y)]
+                except KeyError:
+                    print("Key not found:", (x, y))
+                    continue
+
                 detected_hands.append((
-                    self.tracked_hands[(x, y)],
+                    hand_id,
                     (screen_x, screen_y),
                     is_closed
                 ))
+
+                # detected_hands.append((
+                #     self.tracked_hands[(x, y)],
+                #     (screen_x, screen_y),
+                #     is_closed
+                # ))
+
                 current_hands.add((x, y))
                 
                 mp_drawing.draw_landmarks(

@@ -55,9 +55,9 @@ class Hand:
                 rm_score = rm.kill(rms)
                 score += rm_score
                 if rm_score < 0:
-                    pygame.mixer.Sound(rickSound).play().set_volume(SOUNDS_VOLUME)
+                    pygame.mixer.Sound(rickSound).play()
                 else:
-                    pygame.mixer.Sound('assets/sounds/slap.wav').play().set_volume(SOUNDS_VOLUME)
+                    pygame.mixer.Sound('assets/sounds/slap.wav').play()
         else:
             self.left_click = False
         return score

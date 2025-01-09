@@ -57,9 +57,11 @@ class Game:
                 self.rms.append(Morty())
     def load_camera(self):
         _, self.frame = self.cap.read()
-        # width = 800 
-        # height = 550  
-        # self.frame = cv2.resize(self.frame, (width, height))  
+        # width =  1250
+        # height = 700
+        width =  800
+        height = 600
+        self.frame = cv2.resize(self.frame, (width, height))  
     def set_hand_positions(self):
         self.frame = self.hand_tracking.scan_hands(self.frame)
         hands_positions, hands_closed = self.hand_tracking.get_hands_data()
@@ -161,10 +163,10 @@ class Game:
             # width_scores_rect = 600 # 400
             # height_scores_rect = 600 # 300
 
-            x_scores_rect = SCREEN_WIDTH * 0.3 #  SCREEN_WIDTH // 2 - 200
-            y_scores_rect = SCREEN_HEIGHT * 0.18 # 250
-            width_scores_rect = 600 # 400
-            height_scores_rect = 500 # 300
+            x_scores_rect = SCREEN_WIDTH * 0.32 #  SCREEN_WIDTH // 2 - 200
+            y_scores_rect = SCREEN_HEIGHT * 0.20 # 250
+            width_scores_rect = 650 # 400
+            height_scores_rect = 550 # 300
             scores_rect = pygame.Rect(x_scores_rect, y_scores_rect, width_scores_rect, height_scores_rect) # กรอบ Top Scorers
             pygame.draw.rect(self.surface, (6, 2, 38), scores_rect, border_radius=30)  # วาดพื้นหลังกรอบ 
             pygame.draw.rect(self.surface, (189, 173, 0), scores_rect, width=10, border_radius=30)  # วาดกรอบ 
@@ -172,8 +174,8 @@ class Game:
             sorted_scores = sorted([(color, score) for color, score in self.scores.items() if score > 0],
                                  key=lambda x: x[1], reverse=True)
             
-            padding = 60
-            center_x = SCREEN_WIDTH // 2
+            padding = 80
+            center_x = SCREEN_WIDTH // 2.05
             y_start = y_scores_rect + padding 
 
             ui.draw_text_with_outline(
@@ -201,8 +203,8 @@ class Game:
                            pos_mode="center")
             # # Continue button
             padding_continue_button = 20
-            center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
-            button_y = SCREEN_HEIGHT * 0.56
+            center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 1.7
+            button_y = SCREEN_HEIGHT * 0.58
             if ui.button(self.surface, center_x, button_y+padding_continue_button, "Continue", click_sound=self.sounds["im_out"]):
                 return "menu"
         cv2.imshow("Frame", self.frame)
