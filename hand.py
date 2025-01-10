@@ -6,14 +6,15 @@ import cv2
 import random
 class Hand:
     HAND_IMAGES = [
-        "assets/images/hand/Hand_Pink.png",
+        # "assets/images/hand/Hand_Pink.png",
         "assets/images/hand/Hand_Red.png",
         "assets/images/hand/Hand_Yellow.png",
-        "assets/images/hand/Hand_Purple.png",
-        "assets/images/hand/Hand_Blue.png"
+        # "assets/images/hand/Hand_Purple.png",
+        # "assets/images/hand/Hand_Blue.png"
     ]
 
-    HAND_COLORS = ["Pink", "Red", "Yellow", "Purple", "Blue"]
+    # HAND_COLORS = ["Pink", "Red", "Yellow", "Purple", "Blue"]
+    HAND_COLORS = ["Red", "Yellow"]
 
     def __init__(self, hand_id=0):
         self.hand_id = hand_id
