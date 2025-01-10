@@ -15,7 +15,9 @@ class Game:
         self.background = Background('assets/images/background/game_bg.png')
         self.cap = cv2.VideoCapture(1)
         self.sounds = {}
-        self.sounds["im_out"] = pygame.mixer.Sound("assets/sounds/im_out.mp3")
+        self.sounds["continue_sounds"] = pygame.mixer.Sound("assets/sounds/continue_sounds.mp3")
+        self.sounds['15sec'] = pygame.mixer.Sound("assets/sounds/15sec.mp3")
+        self.alert_time_sound = False 
         self.sounds["Applause"] = pygame.mixer.Sound("assets/sounds/Applause.mp3")
         self.sounds["Applause"].set_volume(0.5) 
         self.end_sound_played = False 
@@ -134,12 +136,16 @@ class Game:
 
     def game_time_update(self):
         self.time_left = max(round(GAME_DURATION - (time.time() - self.game_start_time), 1), 0)
+        if self.time_left == 16 and not self.alert_time_sound:
+            self.sounds["15sec"].play()
+            self.alert_time_sound = True
         
     def update(self):
         self.load_camera()
         self.set_hand_positions()
         self.game_time_update()
         self.draw()
+
         if self.time_left > 0:
             self.spawn_rms()
             for hand in self.hands:
@@ -148,6 +154,8 @@ class Game:
                 self.scores[hand_color] = score
             for rm in self.rms:
                 rm.move()
+
+
         else:
             if not self.end_sound_played:  
                 self.sounds["Applause"].play() 
@@ -205,7 +213,7 @@ class Game:
             padding_continue_button = 20
             center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 1.7
             button_y = SCREEN_HEIGHT * 0.58
-            if ui.button(self.surface, center_x, button_y+padding_continue_button, "Continue", click_sound=self.sounds["im_out"]):
+            if ui.button(self.surface, center_x, button_y+padding_continue_button, "Continue", click_sound=self.sounds["continue_sounds"]):
                 return "menu"
         cv2.imshow("Frame", self.frame)
         cv2.waitKey(1)
