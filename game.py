@@ -37,7 +37,7 @@ class Game:
         }
         self.end_sound_played = False
         self.game_start_time = time.time()
-        self.initial_delay = 10
+        self.initial_delay = 20
 
     def spawn_rms(self):
         t = time.time()
