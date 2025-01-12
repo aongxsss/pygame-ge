@@ -62,7 +62,6 @@ class HandTracking:
         
         if self.results.multi_hand_landmarks:
             detected_hands = []
-            # สร้าง set ของ IDs ที่ใช้งานอยู่
             used_ids = set(self.tracked_hands.values())
             
             for hand_landmarks in self.results.multi_hand_landmarks:
@@ -70,7 +69,6 @@ class HandTracking:
                 screen_x, screen_y = int(x * SCREEN_WIDTH), int(y * SCREEN_HEIGHT)
                 
                 hand_found = False
-                # ตรวจสอบมือที่มีอยู่แล้ว
                 for tracked_pos, hand_id in list(self.tracked_hands.items()):
                     old_x, old_y = tracked_pos
                     if abs(x - old_x) < 0.2 and abs(y - old_y) < 0.2:
@@ -79,19 +77,16 @@ class HandTracking:
                         hand_found = True
                         break
                 
-                # ถ้าเป็นมือใหม่
                 if not hand_found:
-                    # หา ID ที่ว่างอยู่
                     available_id = 0
                     while available_id in used_ids and available_id < 5:
                         available_id += 1
                     
-                    # ถ้ายังมี ID ว่างอยู่
                     if available_id < 5:
                         self.tracked_hands[(x, y)] = available_id
                         used_ids.add(available_id)
                 
-                # เช็คว่ามือกำหรือไม่
+                
                 y_tip = hand_landmarks.landmark[12].y
                 is_closed = y_tip > y
                 
@@ -123,19 +118,15 @@ class HandTracking:
                     mp_drawing_styles.get_default_hand_connections_style()
                 )
 
-            # ลบมือที่ไม่ได้ถูกตรวจจับแล้ว
             self.tracked_hands = {pos: id_ for pos, id_ in self.tracked_hands.items() 
                                 if pos in current_hands}
 
-            # เรียงตาม ID
             detected_hands.sort(key=lambda x: x[0])
             
-            # อัพเดตตำแหน่งและสถานะ
             for _, pos, closed in detected_hands:
                 self.hands_positions.append(pos)
                 self.hands_closed.append(closed)
 
-        # ถ้าไม่พบมือ
         if not self.results.multi_hand_landmarks:
             self.tracked_hands.clear()
 

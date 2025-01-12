@@ -3,20 +3,20 @@ import random
 import time
 import image
 from settings import *
-mortyImgs = ['assets/images/morty/Aliens_B_.png', 'assets/images/morty/Aliens_B_.png']
-class Morty:
+aliens_bImgs = ['assets/images/aliens_b/Aliens_B_.png', 'assets/images/aliens_b/Aliens_B_.png']
+class aliens_b:
     def __init__(self):
         #size
-        random_size_value = random.uniform(MORTY_SIZE_RANDOMIZE[0], MORTY_SIZE_RANDOMIZE[1])
-        size = (int(MORTY_SIZES[0] * random_size_value), int(MORTY_SIZES[1] * random_size_value))
+        random_size_value = random.uniform(aliens_b_SIZE_RANDOMIZE[0], aliens_b_SIZE_RANDOMIZE[1])
+        size = (int(aliens_b_SIZES[0] * random_size_value), int(aliens_b_SIZES[1] * random_size_value))
         moving_direction, start_pos = self.define_spawn_pos(size)
         self.rect = pygame.Rect(start_pos[0], start_pos[1], size[0]//1.4, size[1]//1.4)
-        mortyImg = random.choice(mortyImgs)
-        self.images = [image.load(mortyImg, size=size, flip=moving_direction=="right")]
+        aliens_bImg = random.choice(aliens_bImgs)
+        self.images = [image.load(aliens_bImg, size=size, flip=moving_direction=="right")]
         self.current_frame = 0
         self.animation_timer = 0
-    def define_spawn_pos(self, size): # define the start pos and moving vel of the morty
-        vel = random.uniform(MORTY_MOVE_SPEED["min"], MORTY_MOVE_SPEED["max"])
+    def define_spawn_pos(self, size): # define the start pos and moving vel of the aliens_b
+        vel = random.uniform(aliens_b_MOVE_SPEED["min"], aliens_b_MOVE_SPEED["max"])
         moving_direction = random.choice(("left", "right", "up", "down"))
         if moving_direction == "right":
             start_pos = (-size[0], random.randint(size[1], SCREEN_HEIGHT-size[1]))
@@ -47,6 +47,6 @@ class Morty:
         image.draw(surface, self.images[self.current_frame], self.rect.center, pos_mode="center")
         if DRAW_HITBOX:
             self.draw_hitbox(surface)
-    def kill(self, morty): # remove the morty from the list
-        morty.remove(self)
+    def kill(self, aliens_b): # remove the aliens_b from the list
+        aliens_b.remove(self)
         return 1

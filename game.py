@@ -5,8 +5,8 @@ from settings import *
 from background import Background
 from hand import Hand
 from hand_tracking import HandTracking
-from morty import Morty
-from rick import Rick
+from aliens_b import aliens_b
+from aliens_a import aliens_a
 import cv2
 import ui
 class Game:
@@ -27,7 +27,7 @@ class Game:
         self.hands = []  # List of Hand objects
         self.rms = []
         self.rms_spawn_timer = 0
-        self.rick_delay_timer = time.time() + 10
+        self.aliens_a_delay_timer = time.time() + 10
         self.scores = {
             "Pink": 0,
             "Red": 0,
@@ -37,7 +37,7 @@ class Game:
         }
         self.end_sound_played = False
         self.game_start_time = time.time()
-        self.initial_delay = 10
+        self.initial_delay = INIT_DELAY
 
     def spawn_rms(self):
         t = time.time()
@@ -46,17 +46,17 @@ class Game:
             return
             
         if t > self.rms_spawn_timer:
-            self.rms_spawn_timer = t + MORTY_SPAWN_TIME
-            # increase the probability that the rm will be a rick over time
+            self.rms_spawn_timer = t + aliens_b_SPAWN_TIME
+            # increase the probability that the rm will be a aliens_a over time
             elapsed_time = t - self.game_start_time - self.initial_delay  # Adjust elapsed time to account for delay
             nb = (GAME_DURATION-self.time_left)/GAME_DURATION * 100 / 2  # increase from 0 to 50 during all the game (linear)
             if random.randint(0, 100) < nb:
-                self.rms.append(Rick())
+                self.rms.append(aliens_a())
             else:
-                self.rms.append(Morty())
-            # spawn another morty after the half of the game
+                self.rms.append(aliens_b())
+            # spawn another aliens_b after the half of the game
             if self.time_left < GAME_DURATION/2:
-                self.rms.append(Morty())
+                self.rms.append(aliens_b())
     def load_camera(self):
         _, self.frame = self.cap.read()
         # width =  1250
@@ -69,7 +69,6 @@ class Game:
         hands_positions, hands_closed = self.hand_tracking.get_hands_data()
         tracked_hands = self.hand_tracking.tracked_hands
 
-        # สร้าง map ของ position กับ hand_id จาก tracked_hands
         position_to_id = {}
         for i, pos in enumerate(hands_positions):
             screen_x, screen_y = pos
@@ -78,25 +77,20 @@ class Game:
                 if abs(tracked_pos[0] - rel_x) < 0.1 and abs(tracked_pos[1] - rel_y) < 0.1:
                     position_to_id[pos] = tracked_id
                     break
-        # จัดการกับ hands list
         new_hands = []
         for i, (pos, is_closed) in enumerate(zip(hands_positions, hands_closed)):
-            hand_id = position_to_id.get(pos, i)  # ไม่ต้องทำ modulo ที่นี่
-            
-            # หา hand เดิมที่มี id ตรงกัน
+            hand_id = position_to_id.get(pos, i) 
             existing_hand = None
             for hand in self.hands:
-                if hand.hand_id == hand_id % 5:  # เทียบ hand_id หลัง modulo
+                if hand.hand_id == hand_id % 5: 
                     existing_hand = hand
                     break
             
-            # ถ้าไม่มี hand เดิม สร้างใหม่
             if existing_hand is None:
-                hand = Hand(hand_id=hand_id)  # Hand class จะจัดการ modulo เอง
+                hand = Hand(hand_id=hand_id)
             else:
                 hand = existing_hand
                 
-            # อัพเดตตำแหน่งและสถานะ
             hand.rect.center = pos
             hand.left_click = is_closed
             if is_closed:

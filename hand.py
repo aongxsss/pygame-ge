@@ -46,17 +46,17 @@ class Hand:
         return [rm for rm in rms if self.rect.colliderect(rm.rect)]
     
     def kill_rms(self, rms, score, sounds): # will kill the RM's that collide with the hand when the left mouse button is pressed
-        # rickSounds = [ 'assets/sounds/oh.mp3',
+        # aliens_aSounds = [ 'assets/sounds/oh.mp3',
         #               'assets/sounds/you_lil_turd.mp3', 'assets/sounds/you_lil_piece_of_shit.mp3',
         #              'assets/sounds/bitch.mp3']
         if self.left_click: # if left click
             for rm in self.on_rm(rms):
-                rickSound = 'assets/sounds/oh.mp3'
-                # rickSound = random.choice(rickSounds)
+                aliens_aSound = 'assets/sounds/oh.mp3'
+                # aliens_aSound = random.choice(aliens_aSounds)
                 rm_score = rm.kill(rms)
                 score += rm_score
                 if rm_score < 0:
-                    pygame.mixer.Sound(rickSound).play()
+                    pygame.mixer.Sound(aliens_aSound).play()
                 else:
                     pygame.mixer.Sound('assets/sounds/slap.wav').play()
         else:

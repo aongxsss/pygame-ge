@@ -14,20 +14,21 @@ DRAW_FPS = True
 BUTTONS_SIZES = (240, 90)
 HAND_SIZE = 180
 HAND_HITBOX_SIZE = (60, 80)
-MORTY_SIZES = (80, 80)
-MORTY_SIZE_RANDOMIZE = (1,2) # for each new morty, it will multiply the size with an random value beteewn X and Y
-RICKS_SIZES = (100, 100)
-RICK_SIZE_RANDOMIZE = (1.2, 1.5)
+aliens_b_SIZES = (80, 80)
+aliens_b_SIZE_RANDOMIZE = (1,2) # for each new aliens_b, it will multiply the size with an random value beteewn X and Y
+aliens_aS_SIZES = (100, 100)
+aliens_a_SIZE_RANDOMIZE = (1.2, 1.5)
 # drawing
 DRAW_HITBOX = False # will draw all the hitbox
 # animation
 ANIMATION_SPEED = 0.09 # the frame of the deities will change every X sec # Default is 0.09
 # ANIMATION_SPEED = 0.3
 # difficulty
-GAME_DURATION = 70 # the game will last X sec
-MORTY_SPAWN_TIME = 0.5 # Default is 1
-MORTY_MOVE_SPEED = {"min": 6, "max": 8} # Default is 1 {"min": 1, "max": 6}
-RICK_PENALITY = 1 # will remove X of the score of the player (if he kills an rick)
+GAME_DURATION = 30 # the game will last X sec
+INIT_DELAY = 10 # initial delay time at start
+aliens_b_SPAWN_TIME = 0.5 # Default is 1
+aliens_b_MOVE_SPEED = {"min": 6, "max": 8} # Default is 1 {"min": 1, "max": 6}
+aliens_a_PENALITY = 1 # will remove X of the score of the player (if he kills an aliens_a)
 # colors
 COLORS = {"title": (255, 255, 255), "score": (255, 255, 255),"final_score": (255, 215, 0), "timer": (255, 255, 255),
             "buttons": {"default": (56, 67, 209), "second":  (87, 99, 255),
