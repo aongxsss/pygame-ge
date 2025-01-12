@@ -15,8 +15,8 @@ class Menu:
         self.draw()
         center_x = SCREEN_WIDTH // 2 - BUTTONS_SIZES[0] // 2
         center_x_of_start = center_x-120
-        if ui.button(self.surface, center_x_of_start, 950, "Start", click_sound=self.click_sound):
+        if ui.button(self.surface, center_x_of_start, 700, "Start", click_sound=self.click_sound):
             return "game"
-        if ui.button(self.surface, center_x_of_start+BUTTONS_SIZES[1]*3, 950, "Quit", click_sound=self.click_sound):
+        if ui.button(self.surface, center_x_of_start+BUTTONS_SIZES[1]*3, 700, "Quit", click_sound=self.click_sound):
             pygame.quit()
             sys.exit()
